@@ -13,7 +13,7 @@ import Not from './pages/Not'
 import Home from './pages/Home'
 import Video from './pages/Video'
 import Header from './components/section/Header'
-import Main from './components/section/Main'
+import Main from './components/section/main/Main'
 import Footer from './components/section/Footer'
 
 const App = () => {
