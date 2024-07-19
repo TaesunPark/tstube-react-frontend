@@ -10,7 +10,7 @@ const Header = () => {
             <h1 className='header__logo'>
                 <a href="/">
                     <em></em>  
-                    <span>webs<br />youtube</span>
+                    <span>태<br />튜브</span>
                 </a>
             </h1>
             <div className='header__menu'>

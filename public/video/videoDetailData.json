@@ -1,0 +1,20 @@
+{
+    "videoDetailDatas" : [
+    {
+        "id" : 1,
+        "title" : "YouTube video player",
+        "src" : "https://www.youtube.com/embed/K9vJUXHn80I?si=Jy-7Qxu8-jzSrWZV",
+        "discription" : "설명",        
+        "cnt" : 0,
+        "channelTitle" : "격투"        
+    },
+    {
+        "id" : 2,
+        "title" : "YouTube video player",
+        "src" : "https://www.youtube.com/embed/JB_yU6Oe2eE?si=Wx0RVCNYNV7oG0vt",
+        "discription" : "설명",        
+        "cnt" : 0,
+        "channelTitle" : "엘리"        
+    }
+    ]
+}
