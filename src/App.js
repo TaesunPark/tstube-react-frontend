@@ -14,9 +14,11 @@ import Home from './pages/Home'
 import Video from './pages/Video'
 import Header from './components/section/Header'
 import VideoDetail from './pages/VideoDetail'
+import axios from 'axios'
 import Footer from './components/section/Footer'
 
 const App = () => {
+	axios.defaults.headers.common['Accept'] = 'application/json';
 	const location = useLocation();
 	const isVideoDetailPage = location.pathname.startsWith("/videos/");
 
@@ -25,7 +27,7 @@ const App = () => {
 			{!isVideoDetailPage ? <Header /> : null}			
 			<div id='main-container2'>
 				<Routes>
-					<Route path='/video' element={<Video />}/>
+					<Route path='/videos' element={<Video />}/>					
 					<Route path='/'	element={<Video/>}/>
 					<Route path='/today' element={<Today/>}/>
 					<Route path='/home' element={<Home />}/>				
@@ -38,7 +40,7 @@ const App = () => {
 					<Route path='/channel/:channelID' element={<Channel/>} />				
 					<Route path='/search/:searchID' element={<Search/>} />
 					<Route path='/*' element={<Not/>} />
-					<Route path='/videos/:videoID' element={<VideoDetail/>} />
+					<Route path='/video' element={<VideoDetail/>} />
 				</Routes>				
 			</div>			
 		</div>				
