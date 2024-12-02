@@ -17,7 +17,6 @@ class VideoStore {
         
         try {
             const response = await axios.get('http://localhost:8080/videos');
-            console.log(response);
             runInAction(() => {
                 this.videos = response.data.data;
                 this.loading = false;
@@ -40,7 +39,6 @@ class VideoStore {
                     v: videoId,
                 }
             });
-            console.log(response);
             runInAction(() => {
                 this.video = response.data.data;
                 this.loading = false;
