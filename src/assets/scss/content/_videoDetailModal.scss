@@ -22,15 +22,6 @@ $border: solid 2px $color;
     box-sizing: 'border-box';
 }
 
-#video-modal-textarea {
-    width: '100%';
-    padding: '10px';
-    border: '1px solid #ccc';
-    border-radius: '4px';
-    box-sizing: 'border-box';
-    height: '100px';
-}
-
 #video-modal-button {
     display: 'block';
     width: '100%';
@@ -54,6 +45,7 @@ $border: solid 2px $color;
 
 #video-modal-textarea {
     width: 300px;
+    height: 200px;
     box-sizing: border-box;
     padding: 10px;
     border: $border;
@@ -63,6 +55,7 @@ $border: solid 2px $color;
 
 #video-modal-input {
     width: 300px;
+    height: 30%;
     box-sizing: border-box;
     padding: 10px;
     border: $border;

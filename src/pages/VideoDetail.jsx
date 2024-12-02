@@ -1,36 +1,55 @@
-import { useParams } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import videoStore from "../stores/VideoStore";
+import { observer } from "mobx-react";
+import { CommentStoreProvider } from "../stores/CommentStore";
+import CommentComponent from "./Comment";
+import CommentListComponent from "./CommentList";
 
-
-const VideoDetail = () => {
-    const [videoDetails, setVideoDetails] = useState(null);
-    const { videoID } = useParams();
-    const url = "http://localhost:3000/video/videoDetailData.json"
-    // const url = "`http://localhost:3000/video/${videoID}`"
-    const {data, loading, error} = useFetch(url);
-    let videoData;
+const VideoDetail = observer(() => {
+    const [searchParams] = useSearchParams();
+    const videoID = searchParams.get('v');
+    const {video, loading, error} = videoStore;
 
     useEffect(() => {
-        if (data && videoID) {
-            videoData = data?.videoDetailDatas?.[videoID];
-            setVideoDetails(videoData);
-        }
-    }, [data, videoID]);
-    
+        videoStore.getVideo(videoID);
+    }, [videoID]);
+
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading video details.</div>;
-    if (!videoDetails) return <div>No video details available.</div>;
+    if (!video) return <div>No video details available.</div>;
+    if (video.title === null ) {
+        video.title = "hi";
+    }
+    if(video.description === null){
+        video.description = "설명";
+    }
+    if(video.cnt === null){
+        video.cnt = 0;
+    }
 
     return(
         <>
             <div id="main-video">
-            <iframe width="560" height="315" src={videoDetails.src} title={videoDetails.title} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <h1>제목</h1>
-                <p id="video-description">설명</p>
-                <p>조회수</p>
+                <VideoComponent video={video}/>
+                <h1>제목 : {video.title}</h1>
+                <p id="video-description">{video.description}</p>
+                <p>조회수 : {video.cnt}</p>
+            </div>
+            <div>
+                <CommentStoreProvider>
+                    <CommentComponent />
+                    <CommentListComponent />
+                </CommentStoreProvider>
             </div>
         </>
+    )
+});
+
+function VideoComponent({video}) {
+    return (
+        <div
+            dangerouslySetInnerHTML={{__html: video.src}}
+        />
     )
 }
 

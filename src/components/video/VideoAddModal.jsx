@@ -22,7 +22,7 @@ const ModalStyle = {
   }
 }
 
-export const VideoAddModal = ({ modalIsOpen, closeModal, url, setUrl, title, setTitle, description, setDescription }) => {
+export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url, setUrl, title, setTitle, description, setDescription }) => {
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -32,12 +32,10 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, url, setUrl, title, set
     >
       <h2 id='video-modal-h2'>Add New Video</h2>
       <div id = 'video-modal-box'>        
-        <input
-          type="text"
+      <textarea id = 'video-modal-textarea'
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter URL"
-          id='video-modal-input'        
+          placeholder="iframe 정보를 넣어주세요."          
         />
       </div>
       <div id = 'video-modal-box'>        
@@ -64,7 +62,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, url, setUrl, title, set
           Close
         </button>
         <button
-          onClick={closeModal}
+          onClick={handleConfirmClick}
           id='video-modal-button'
         >
           확인
