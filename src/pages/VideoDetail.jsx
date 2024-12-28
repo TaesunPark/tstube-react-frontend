@@ -5,6 +5,8 @@ import { observer } from "mobx-react";
 import { CommentStoreProvider } from "../stores/CommentStore";
 import CommentComponent from "./Comment";
 import CommentListComponent from "./CommentList";
+import ChatComponent from "../components/chat/ChatComponent";
+
 
 const VideoDetail = observer(() => {
     const [searchParams] = useSearchParams();
@@ -34,12 +36,17 @@ const VideoDetail = observer(() => {
                 <h1>제목 : {video.title}</h1>
                 <p id="video-description">{video.description}</p>
                 <p>조회수 : {video.cnt}</p>
-            </div>
-            <div>
-                <CommentStoreProvider>
-                    <CommentComponent />
-                    <CommentListComponent />
-                </CommentStoreProvider>
+            </div>            
+            <div id="comment-container">
+                <div id="comment-container2">
+                    <CommentStoreProvider>
+                        <CommentComponent />
+                        <CommentListComponent />
+                    </CommentStoreProvider>
+                </div>
+                <div id="comment-container2">                    
+                    <ChatComponent videoId={video.videoId} />
+                </div>
             </div>
         </>
     )
