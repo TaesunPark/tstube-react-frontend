@@ -14,17 +14,17 @@ import { AiOutlineInstagram } from "react-icons/ai";
 
 export const headerMenus = [
     {
-        title: "추천 영상",
+        title: "저장 영상 목록",
         icon: <CiBaseball />,
         src: "/"
     },
     {
-        title: "추천 영상",
+        title: "스트리밍 영상",
         icon: <CiMoneyBill />,
         src: "/today"
     },
     {
-        title: "추천 영상",
+        title: "즐겨찾기 영상",
         icon: <CiCoins1 />,
         src: "/developer"
     },

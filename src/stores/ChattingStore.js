@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { CHAT_SOCKET_URL } from "../env";
 
 class ChattingStore {
     messages = [];
@@ -17,7 +18,7 @@ class ChattingStore {
     connect(videoId) {
         this.videoId = videoId;
 
-        this.ws = new WebSocket(`ws://localhost:8080/ws/chat`);
+        this.ws = new WebSocket(CHAT_SOCKET_URL + `/ws/chat`);
         
         this.ws.onopen = () => {
             console.log(`Connected to WebSocket server.`, this.videoId)

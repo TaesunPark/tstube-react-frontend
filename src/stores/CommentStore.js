@@ -1,6 +1,7 @@
 import axios from "axios";
 import { makeAutoObservable, runInAction } from "mobx";
 import { createContext, useContext } from "react";
+import { SERVER_URL } from "../env";
 
 class CommentStore {    
     comments = [];
@@ -8,7 +9,7 @@ class CommentStore {
     error = null;
     videoId = null;
     comment = null;
-    createTIme = null;
+    createTime = null;
 
     constructor () {
         makeAutoObservable(this);
@@ -20,7 +21,7 @@ class CommentStore {
         this.error = null;
         
         try {            
-            const response = await axios.get('http://localhost:8080/comments', {
+            const response = await axios.get(SERVER_URL + '/api/comments', {
                 params: {
                     v: videoId,
                 }
@@ -44,7 +45,7 @@ class CommentStore {
     // };
     async addComment(newComment) {
         try {
-            const response = await axios.post('http://localhost:8080/comment', newComment);
+            const response = await axios.post(SERVER_URL + '/api/comment', newComment);
             
             runInAction(() => {
                 const newComments = [...this.comments];                

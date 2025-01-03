@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios from "axios";
+import { SERVER_URL } from "../env";
 class VideoStore {
     videos = [];
     video = null;
@@ -16,7 +17,7 @@ class VideoStore {
         this.error = null;
         
         try {
-            const response = await axios.get('http://localhost:8080/videos');
+            const response = await axios.get(SERVER_URL +'/api/videos');
             runInAction(() => {
                 this.videos = response.data.data;
                 this.loading = false;
@@ -34,7 +35,7 @@ class VideoStore {
         this.error = null;
         
         try {
-            const response = await axios.get('http://localhost:8080/video', {
+            const response = await axios.get(SERVER_URL + '/api/video', {
                 params: {
                     v: videoId,
                 }
@@ -54,7 +55,7 @@ class VideoStore {
     // 새로운 비디오 추가 로직
     async addVideo(newVideo) {
         try {
-            const response = await axios.post('http://localhost:8080/video', newVideo);
+            const response = await axios.post(SERVER_URL + '/api/video', newVideo);
             runInAction(()=> {
                 this.videos.push(response.data);
             });
