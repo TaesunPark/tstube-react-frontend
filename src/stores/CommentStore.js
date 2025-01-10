@@ -21,7 +21,7 @@ class CommentStore {
         this.error = null;
         
         try {            
-            const response = await axios.get(SERVER_URL + '/api/comments', {
+            const response = await axios.get(SERVER_URL + '/comments', {
                 params: {
                     v: videoId,
                 }
@@ -45,7 +45,7 @@ class CommentStore {
     // };
     async addComment(newComment) {
         try {
-            const response = await axios.post(SERVER_URL + '/api/comment', newComment);
+            const response = await axios.post(SERVER_URL + '/comment', newComment);
             
             runInAction(() => {
                 const newComments = [...this.comments];                
