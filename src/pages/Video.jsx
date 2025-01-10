@@ -4,6 +4,7 @@ import { CiCirclePlus } from 'react-icons/ci';
 import { VideoAddModal } from '../components/video/VideoAddModal';
 import videoStore from '../stores/VideoStore';
 import { observer } from 'mobx-react';
+import FloatingButton from '../components/video/FloatingButton';
 
 const Video = observer(() => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -40,6 +41,10 @@ const Video = observer(() => {
     closeModal();
   };
 
+  const handleFloatingButtonClick = () => {
+
+  }
+
   return (
     <div id="main" role="main">
       <div id="video-container2" role="video-container2">
@@ -66,6 +71,7 @@ const Video = observer(() => {
           setDescription={setDescription}
         />
       </div>
+      <FloatingButton/>
     </div>
   );
 });
