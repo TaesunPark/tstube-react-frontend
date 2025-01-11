@@ -35,6 +35,7 @@ const Video = observer(() => {
       thumbnail: 'https://i.ytimg.com/vi/K9vJUXHn80I/maxresdefault.jpg', // Placeholder thumbnail
       cnt: 0,
       channelTitle: title,
+      type: "iframe",
     };
 
     videoStore.addVideo(newVideo);

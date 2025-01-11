@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import videoStore from "../stores/VideoStore";
 import { observer } from "mobx-react";
 import { CommentStoreProvider } from "../stores/CommentStore";
@@ -9,6 +9,13 @@ import ChatComponent from "../components/chat/ChatComponent";
 import { SERVER_URL } from "../env";
 
 const VideoDetail = observer(() => {
+    const [isChatVisible, setIsChatVisible] = useState(true);
+    const toggleChatVisibility = () => setIsChatVisible((prev) => !prev);
+
+    const videoContainerStyle = {
+        width: isChatVisible ? "70%" : "100%",
+    };
+
     const [searchParams] = useSearchParams();
     const videoID = searchParams.get('v');
     const { video, loading, error } = videoStore;
@@ -26,17 +33,26 @@ const VideoDetail = observer(() => {
 
     return (
         <>
-            <div id="main-video">
-                {console.log(video.type + " 타입")}
-                {video.type === "upload" ? (
-                    <UploadVideoComponent video1={video} />
-                ) : (
-                    <VideoComponent video={video} />
-                )}
-                <h1>제목 : {video.title}</h1>
-                <p id="video-description">{video.description}</p>
-                <p>조회수 : {video.cnt}</p>
+            <div id="video-chat-container">
+                <div id="main-video" style={videoContainerStyle}>                    
+                    {video.type === "upload" ? (
+                        <UploadVideoComponent video1={video} />
+                    ) : (
+                        <VideoComponent video={video} />
+                    )}                    
+                </div>
+                <div>                    
+                    <div id="chat-container" className={isChatVisible ? "" : "hidden"}>
+                        <ChatComponent videoId={video.videoId} />
+                    </div>
+                </div>                
             </div>
+            <h1>제목 : {video.title}</h1>
+                    <p id="video-description">{video.description}</p>
+                    <p>조회수 : {video.cnt}</p>
+                    <button id="chat-toggle-button" onClick={toggleChatVisibility}>
+                        {isChatVisible ? "채팅 숨기기" : "채팅 보기"}
+                    </button>
             
             <div id="comment-container">
                 <div id="comment-container2">
@@ -44,10 +60,7 @@ const VideoDetail = observer(() => {
                         <CommentComponent />
                         <CommentListComponent />
                     </CommentStoreProvider>
-                </div>
-                <div id="comment-container2">
-                    <ChatComponent videoId={video.videoId} />
-                </div>
+                </div>             
             </div>
         </>
     );

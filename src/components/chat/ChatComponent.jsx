@@ -29,13 +29,14 @@ const ChatComponent = observer(({ videoId }) => {
 
     useEffect(() => {
         // 새 메시지가 추가될 때 자동으로 스크롤
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        const messagesContainer = messagesEndRef.current;
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     }, [chattingStore.messages]);
 
     return (
-        <div style={{ border: "1px solid #ccc", padding: "10px", width: "300px" }}>
+        <div>
             {/* 에러 메시지 표시 */}
             {chattingStore.error && (
                 <div style={{ color: "red", marginBottom: "10px" }}>
@@ -44,39 +45,33 @@ const ChatComponent = observer(({ videoId }) => {
             )}
 
             {/* 메시지 목록 */}
-            <div
-                style={{
-                    height: "200px",
-                    overflowY: "scroll",
-                    border: "1px solid #ddd",
-                    marginBottom: "10px",
-                    padding: "5px",
-                }}
+            <div id="chat-messages"
+            ref={messagesEndRef}
             >
                 {chattingStore.messages.length === 0 ? (
                     <div>대화가 없습니다.</div>
                 ) : (
                     chattingStore.messages.map((msg, index) => (
                         <div key={index} style={{ marginBottom: "5px" }}>
-                            <strong>{msg.sender || "Unknown"}</strong>: {msg.message}
+                            <strong>{msg.sender || "Unknown"}</strong>: {msg.message}                            
                         </div>
-                    ))
+                    ))                    
                 )}
-                <div ref={messagesEndRef} />
             </div>
-
+            
             {/* 메시지 입력 */}
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress} // Enter 키로 메시지 전송
-                placeholder="메시지를 입력하세요..."
-                style={{ width: "calc(100% - 60px)", marginRight: "5px" }}
-            />
-            <button onClick={sendMessage} style={{ width: "50px" }}>
-                전송
-            </button>
+            <div id="chat-container-input-box">
+                <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={handleKeyPress} // Enter 키로 메시지 전송
+                    placeholder="메시지를 입력하세요..."                    
+                />
+                <button onClick={sendMessage} style={{ width: "50px" }}>
+                    전송
+                </button>
+            </div>
         </div>
     );
 });
