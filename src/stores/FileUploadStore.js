@@ -1,11 +1,13 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios from "axios";
 import { SERVER_URL } from "../env";
+import videoStore from "./VideoStore";
 
 class FileUploadStore {
   isUploading = false;
   uploadError = null;
   uploadedFile = null;
+  imageFile = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -24,8 +26,8 @@ class FileUploadStore {
       const response = await axios.post(`${SERVER_URL}/upload`, formData);
 
       runInAction(() => {
-        this.uploadedFile = response.data; // 서버에서 반환된 파일 정보
-        this.isUploading = false;
+        this.uploadedFile = response.data.data; // 서버에서 반환된 파일 정보
+        this.isUploading = false;        
       });
     } catch (error) {
       runInAction(() => {
@@ -34,6 +36,35 @@ class FileUploadStore {
       });
     }
   }
+
+  async uploadImageFile(file, videoId) {
+    this.isUploading = true;
+    this.uploadError = null;    
+    this.imageFile = null;
+    let imageFileUrl = null;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("videoId", videoId);
+
+      const response = await axios.post(`${SERVER_URL}/upload/image`, formData)
+
+      runInAction(() => {
+        this.imageFile = response.data.data;
+        this.isUploading = false;
+        imageFileUrl = response.data.data.fileName;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.uploadError = error.response?.data?.message || "Failed to upload file";
+        this.isUploading = false;
+      })
+    }
+
+    return imageFileUrl;
+  }
+
 }
 
 export const fileUploadStore = new FileUploadStore();

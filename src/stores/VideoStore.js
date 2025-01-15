@@ -54,17 +54,25 @@ class VideoStore {
 
     // 새로운 비디오 추가 로직
     async addVideo(newVideo) {
+        let addedVideoId = null;
+
         try {
             const response = await axios.post(SERVER_URL + '/video', newVideo);
-            runInAction(()=> {
-                this.videos.push(response.data);
-            });
+            runInAction(()=> {                                
+                addedVideoId = response.data.data.videoId;
+            });            
         } catch (error) {
             runInAction(() => {
                 this.error = 'Failed to add video';
             })
-        }
+        }        
+        return addedVideoId;
     }
+
+    setAddVideo(newVideo) {
+        this.videos.push(newVideo);
+    }
+    
 }
 const videoStore = new VideoStore();
 export default videoStore;

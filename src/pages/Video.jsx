@@ -3,6 +3,7 @@ import { VideoItem } from '../components/video/VideoItem';
 import { CiCirclePlus } from 'react-icons/ci';
 import { VideoAddModal } from '../components/video/VideoAddModal';
 import videoStore from '../stores/VideoStore';
+import { fileUploadStore } from '../stores/FileUploadStore';
 import { observer } from 'mobx-react';
 import FloatingButton from '../components/video/FloatingButton';
 
@@ -11,6 +12,8 @@ const Video = observer(() => {
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
+  const [preview, setPreview] = useState(null); // 썸네일 미리보기 URL
 
   useEffect(() => {
     videoStore.fetchVideos();
@@ -24,6 +27,8 @@ const Video = observer(() => {
   // 모달 닫기
   const closeModal = () => {
     setModalIsOpen(false);
+    setPreview(null);
+    setThumbnail(null);
   };
 
   // 비디오 추가 로직
@@ -32,13 +37,22 @@ const Video = observer(() => {
       title,
       src: url,
       description,
-      thumbnail: 'https://i.ytimg.com/vi/K9vJUXHn80I/maxresdefault.jpg', // Placeholder thumbnail
+      thumbnailUrl: 'https://i.ytimg.com/vi/K9vJUXHn80I/maxresdefault.jpg', // Placeholder thumbnail
       cnt: 0,
       channelTitle: title,
       type: "iframe",
     };
 
-    videoStore.addVideo(newVideo);
+    let videoId = null;
+    videoStore.addVideo(newVideo)
+        .then((data) => {          
+          videoId = data;
+          fileUploadStore.uploadImageFile(thumbnail, videoId).then((data) => {
+            newVideo.thumbnailUrl = data;
+            videoStore.setAddVideo(newVideo);
+          })          
+        })
+    
     closeModal();
   };
 
@@ -70,6 +84,10 @@ const Video = observer(() => {
           setTitle={setTitle}
           description={description}
           setDescription={setDescription}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          preview={preview}
+          setPreview={setPreview}
         />
       </div>
       <FloatingButton/>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../env";
 
 // onClick 했을 때 해당 라우터로 리다이렉트
 
@@ -11,9 +12,8 @@ export const VideoItem = ({ video }) => {
     }
 
     return(
-        <div id="video-item" role="video-item" onClick={handleClick}>        
-            <p>{video.description}</p>
-            <img src={video.thumbnail} alt={`${video.title} thumbnail`} />
+        <div id="video-item" onClick={handleClick}>                                
+            <img src={SERVER_URL+"/"+video.thumbnailUrl} alt={`${video.title} thumbnail`} />
         </div>
     );
 }
