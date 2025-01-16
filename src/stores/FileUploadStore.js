@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios from "axios";
 import { SERVER_URL } from "../env";
-import videoStore from "./VideoStore";
 
 class FileUploadStore {
   isUploading = false;

@@ -39,18 +39,19 @@ const FileUploadModal = observer(({ onClose }) => {
     }
 
     // 비디오 파일 업로드
-    fileUploadStore.uploadFile(file, title).then((videoId) => {
+    fileUploadStore.uploadFile(file, title).then((response => {
       // 썸네일 업로드
       if (thumbnail) {
-        fileUploadStore.uploadImageFile(thumbnail, videoId).then((data) => {
+        fileUploadStore.uploadImageFile(thumbnail, response).then((data) => {
           const newVideo = {
             title,
-            thumbnailUrl: data
+            thumbnailUrl: data,
+            videoId: response,
           }
           videoStore.setAddVideo(newVideo);
         })
       }
-    });
+    }));
 
     onClose(); // 모달 닫기
   };

@@ -45,10 +45,11 @@ const Video = observer(() => {
 
     let videoId = null;
     videoStore.addVideo(newVideo)
-        .then((data) => {          
-          videoId = data;
+        .then((response) => {          
+          videoId = response.videoId;
           fileUploadStore.uploadImageFile(thumbnail, videoId).then((data) => {
             newVideo.thumbnailUrl = data;
+            newVideo.videoId = videoId;
             videoStore.setAddVideo(newVideo);
           })          
         })
