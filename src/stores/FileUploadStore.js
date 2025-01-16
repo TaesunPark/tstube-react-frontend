@@ -17,6 +17,7 @@ class FileUploadStore {
     this.isUploading = true;
     this.uploadError = null;
     this.uploadedFile = null;
+    let videoId = null;
 
     try {
       const formData = new FormData();
@@ -27,7 +28,8 @@ class FileUploadStore {
 
       runInAction(() => {
         this.uploadedFile = response.data.data; // 서버에서 반환된 파일 정보
-        this.isUploading = false;        
+        this.isUploading = false;
+        videoId = response.data.data.videoId;
       });
     } catch (error) {
       runInAction(() => {
@@ -35,6 +37,7 @@ class FileUploadStore {
         this.isUploading = false;
       });
     }
+    return videoId;
   }
 
   async uploadImageFile(file, videoId) {

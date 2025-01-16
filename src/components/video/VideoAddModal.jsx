@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import ReusableFileUpload from './ReusableFileUpload';
 
 const ModalStyle = {
   overlay: {
@@ -23,18 +24,6 @@ const ModalStyle = {
 }
 
 export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url, setUrl, title, setTitle, description, setDescription, thumbnail, setThumbnail, preview, setPreview  }) => {
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setThumbnail(file); // 부모 컴포넌트로 전달된 setThumbnail 호출
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result); // 미리보기 URL 설정
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <Modal
@@ -68,33 +57,10 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
         />
       </div>
       {/* 썸네일 업로드 */}
-      <div id="video-modal-box">
-        <label htmlFor="thumbnail-upload" id="video-modal-label">
-          Upload Thumbnail
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          id="thumbnail-upload"
-          onChange={handleFileChange}
-        />
-      </div>
-
-      {/* 썸네일 미리보기 */}
-      {preview && (
-        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-          <img
-            src={preview}
-            alt="Thumbnail Preview"
-            style={{
-              width: '100%',
-              maxWidth: '50px',
-              borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-            }}
-          />
-        </div>
-      )}
+      <ReusableFileUpload
+        label="Upload Thumbnail"
+        setThumbnail={setThumbnail}
+      />
       <div>
         <button
           onClick={closeModal}
