@@ -37,7 +37,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
       <textarea id = 'video-modal-textarea'
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="iframe 정보를 넣어주세요."          
+          placeholder="iframe 태그 또는 url 정보를 넣어주세요."          
         />
       </div>
       <div id = 'video-modal-box'>        
