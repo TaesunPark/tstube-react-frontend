@@ -6,7 +6,7 @@ import { CommentStoreProvider } from "../stores/CommentStore";
 import CommentComponent from "./Comment";
 import CommentListComponent from "./CommentList";
 import ChatComponent from "../components/chat/ChatComponent";
-import { SERVER_URL } from "../env";
+import { VideoRenderer } from "../components/video/VideoRenderer";
 
 const VideoDetail = observer(() => {
     const [isChatVisible, setIsChatVisible] = useState(true);
@@ -34,12 +34,8 @@ const VideoDetail = observer(() => {
     return (
         <>
             <div id="video-chat-container">
-                <div id="main-video" style={videoContainerStyle}>                    
-                    {video.type === "upload" ? (
-                        <UploadVideoComponent video1={video} />
-                    ) : (
-                        <VideoComponent video={video} />
-                    )}                    
+                <div id="main-video" style={videoContainerStyle}>               
+                    <VideoRenderer video={video}/>
                 </div>
                 <div>                    
                     <div id="chat-container" className={isChatVisible ? "" : "hidden"}>
@@ -65,42 +61,5 @@ const VideoDetail = observer(() => {
         </>
     );
 });
-
-function VideoComponent({ video }) {
-    return (
-        <div
-            dangerouslySetInnerHTML={{ __html: video.src }}
-        />
-    );
-}
-
-function UploadVideoComponent({ video1 }) {
-    console.log(video1.fileName + " 비디오");
-    return (
-        <video controls style={{ maxWidth: "100%", height: "auto"}}>
-            <source 
-                src={`${SERVER_URL}/upload?fileName=${video1.fileName}&t=${new Date().getTime()}`} 
-                type="video/mp4" 
-            />
-            <source 
-                src={`${SERVER_URL}/upload?fileName=${video1.fileName}&t=${new Date().getTime()}`} 
-                type="video/x-msvideo" 
-            />
-            <source 
-                src={`${SERVER_URL}/upload?fileName=${video1.fileName}&t=${new Date().getTime()}`} 
-                type="audio/mpeg" 
-            />
-            <source 
-                src={`${SERVER_URL}/upload?fileName=${video1.fileName}&t=${new Date().getTime()}`} 
-                type="audio/ogg" 
-            />
-            <source 
-                src={`${SERVER_URL}/upload?fileName=${video1.fileName}&t=${new Date().getTime()}`} 
-                type="audio/wav" 
-            />
-            Your browser does not support the video tag.
-        </video>
-    );
-}
 
 export default VideoDetail;
