@@ -5,7 +5,7 @@ import { VideoComponent } from "./VideoComponent"
 export function VideoRenderer({ video }){
     switch (video.type) {
         case "upload":
-            return <UploadVideoComponent video1={video} />                            
+            return <UploadVideoComponent video={video} />                            
         case "streaming":
             return <StreamingVideoComponent video={video} />                            
         default:
