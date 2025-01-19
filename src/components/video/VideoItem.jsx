@@ -13,7 +13,7 @@ export const VideoItem = ({ video }) => {
 
     return(
         <div id="video-item" onClick={handleClick}>                                
-            <img src={SERVER_URL+"/"+video.thumbnailUrl} alt={`${video.title} thumbnail`} />
+            <img src={SERVER_URL+"/upload?fileName="+video.thumbnailUrl} alt={`${video.title} thumbnail`} />
         </div>
     );
 }
