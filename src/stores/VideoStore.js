@@ -35,11 +35,7 @@ class VideoStore {
         this.error = null;
         
         try {
-            const response = await axios.get(SERVER_URL + '/video', {
-                params: {
-                    v: videoId,
-                }
-            });
+            const response = await axios.get(`${SERVER_URL}/videos/${videoId}`)
             runInAction(() => {
                 this.video = response.data.data;
                 this.loading = false;
@@ -57,15 +53,14 @@ class VideoStore {
         let response;
 
         try {
-            response = await axios.post(SERVER_URL + '/video', newVideo);
-            runInAction(()=> {                                
-            });            
+            response = await axios.post(`${SERVER_URL}/videos`, newVideo);
+            return response.data.data;            
         } catch (error) {
             runInAction(() => {
                 this.error = 'Failed to add video';
             })
+            throw error;
         }        
-        return response.data.data;
     }
 
     setAddVideo(newVideo) {

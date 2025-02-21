@@ -23,7 +23,7 @@ class FileUploadStore {
       formData.append("file", file);
       formData.append("title", title); // 제목도 함께 보내기
 
-      const response = await axios.post(`${SERVER_URL}/upload`, formData);
+      const response = await axios.post(`${SERVER_URL}/upload/videos`, formData);
 
       runInAction(() => {
         this.uploadedFile = response.data.data; // 서버에서 반환된 파일 정보
@@ -50,7 +50,7 @@ class FileUploadStore {
       formData.append("file", file);
       formData.append("videoId", videoId);
 
-      const response = await axios.post(`${SERVER_URL}/upload/image`, formData)
+      const response = await axios.post(`${SERVER_URL}/upload/thumbnails`, formData)
 
       runInAction(() => {
         this.imageFile = response.data.data;

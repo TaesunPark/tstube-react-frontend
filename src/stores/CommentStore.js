@@ -21,7 +21,7 @@ class CommentStore {
         this.error = null;
         
         try {            
-            const response = await axios.get(SERVER_URL + '/comments', {
+            const response = await axios.get(`${SERVER_URL}/comments`, {
                 params: {
                     v: videoId,
                 }
@@ -36,21 +36,16 @@ class CommentStore {
                 this.error = 'Failed to load videos';
                 this.loading = false;
             });
+            console.error('댓글 가져오기 실패',error);
         }
     }
 
-    // const newComment = {
-    //     videoId: video.videoId,
-    //     comment: video.comment
-    // };
     async addComment(newComment) {
         try {
-            const response = await axios.post(SERVER_URL + '/comment', newComment);
+            const response = await axios.post(`${SERVER_URL}/comments`, newComment);
             
             runInAction(() => {
-                const newComments = [...this.comments];                
-                newComments.push(newComment);
-                this.comments = newComments;
+                this.comments = [...this.comments, response.data.data];
             });
         } catch (error) {
             runInAction(() => {
