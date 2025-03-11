@@ -16,6 +16,7 @@ import Header from './components/section/Header'
 import VideoDetail from './pages/VideoDetail'
 import axios from 'axios'
 import Footer from './components/section/Footer'
+import OAuthCallback from './components/auth/OAuthCallback'
 
 const App = () => {
 	axios.defaults.headers.common['Accept'] = 'application/json';
@@ -41,6 +42,7 @@ const App = () => {
 					<Route path='/search/:searchID' element={<Search/>} />
 					<Route path='/*' element={<Not/>} />
 					<Route path='/video' element={<VideoDetail/>} />
+					<Route path='/oauth/callback' element={<OAuthCallback />} />
 				</Routes>				
 			</div>			
 		</div>				
