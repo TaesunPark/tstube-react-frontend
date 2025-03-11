@@ -1,4 +1,4 @@
-import { CiBaseball } from "react-icons/ci";
+import { CiBaseball, CiLogin } from "react-icons/ci";
 import { CiCoins1 } from "react-icons/ci";
 import { CiBoxes } from "react-icons/ci";
 import { CiMoneyBill } from "react-icons/ci";
@@ -27,7 +27,13 @@ export const headerMenus = [
         title: "내가 올린 영상",
         icon: <CiBoxes />,
         src: "/"
-    },    
+    },
+    {
+        title: "로그인",
+        icon: <CiLogin />,
+        src: "http://localhost:8080/auth/login/kakao",
+        external: true
+    }
 ];
 
 export const searchKeyword = [
