@@ -53,18 +53,29 @@ class VideoStore {
         let response;
 
         try {
-            response = await axios.post(`${SERVER_URL}/videos`, newVideo);
+            response = await axios.post(`${SERVER_URL}/videos`, newVideo, {
+                withCredentials: true // 쿠키 포함
+            });
             return response.data.data;            
         } catch (error) {
             runInAction(() => {
-                this.error = 'Failed to add video';
+                if (error.response) {
+                    // 서버 응답이 있는 경우
+                    if (error.response.status === 401) {
+                        this.error = '로그인이 필요합니다';
+                    } else {
+                        this.error = error.response.data.message || 'Failed to add video';
+                    }
+                } else {
+                    this.error = 'Failed to add video';
+                }
             })
             throw error;
         }        
     }
 
     setAddVideo(newVideo) {
-        this.videos.push(newVideo);
+        this.videos = [...this.videos, newVideo]
     }
     
 }

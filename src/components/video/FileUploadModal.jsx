@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { fileUploadStore } from "../../stores/FileUploadStore";
 import ReusableFileUpload from "./ReusableFileUpload"; // 재사용 가능한 컴포넌트 임포트
 import videoStore from "../../stores/VideoStore";
+import { useAuth } from "../../provisers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const FileUploadModal = observer(({ onClose }) => {
   const [file, setFile] = useState(null); // 업로드할 비디오 파일
   const [title, setTitle] = useState(""); // 제목
   const [error, setError] = useState(""); // 에러 메시지
   const [thumbnail, setThumbnail] = useState(null); // 썸네일 파일
+
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      setError("로그인이 필요한 기능입니다.")
+    }
+  }, [auth.isAuthenticated])
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -29,6 +41,12 @@ const FileUploadModal = observer(({ onClose }) => {
   };
 
   const handleUpload = () => {
+
+    if(!auth.isAuthenticated) {
+      setError("로그인이 필요한 기능입니다.");
+      return;
+    }
+
     if (!file) {
       setError("Please select a video file.");
       return;
@@ -39,16 +57,24 @@ const FileUploadModal = observer(({ onClose }) => {
     }
 
     // 비디오 파일 업로드
-    fileUploadStore.uploadFile(file, title).then((response => {
+    fileUploadStore.uploadFile(file, title, auth).then((response => {
       // 썸네일 업로드
       if (thumbnail) {
-        fileUploadStore.uploadImageFile(thumbnail, response).then((data) => {
+        fileUploadStore.uploadImageFile(thumbnail, response, auth).then((data) => {
           const newVideo = {
             title,
             thumbnailUrl: data,
             videoId: response,
           }
           videoStore.setAddVideo(newVideo);
+        })
+        .catch(error => {
+          console.error("Upload error:", error);
+          if (error.response && error.response.status === 401) {
+            setError("로그인이 필요하거나 세션이 만료되었습니다.");
+          } else {
+            setError("업로드 중 오류가 발생했습니다.");
+          }
         })
       }
     }));
@@ -60,7 +86,20 @@ const FileUploadModal = observer(({ onClose }) => {
     <div id="modal">
       <div id="modal-content">
         <h3>Upload File (audio & video) <br /> (mp4, mp3, ogg, wav)</h3>
-
+        {/* 로그인 상태 표시 */}
+        {!auth.isAuthenticated && (
+          <div>
+            <p>비디오 업로드는 로그인이 필요합니다.</p>
+            <button
+              onClick={() => {
+                onClose();
+                navigate('/login');
+              }}
+            >
+              로그인 페이지로 이동
+            </button>
+          </div>
+        )}
         {/* 제목 입력 */}
         <div>
           <label>Title:</label>
@@ -69,6 +108,7 @@ const FileUploadModal = observer(({ onClose }) => {
             value={title}
             onChange={handleTitleChange}
             placeholder="Enter file title"
+            disabled={!auth.isAuthenticated}
           />
         </div>
 
@@ -79,6 +119,7 @@ const FileUploadModal = observer(({ onClose }) => {
             type="file"
             accept="video/mp4,audio/mpeg,audio/ogg,audio/wav"
             onChange={handleFileChange}
+            disabled={!auth.isAuthenticated}
           />
         </div>
 
@@ -86,6 +127,7 @@ const FileUploadModal = observer(({ onClose }) => {
         <ReusableFileUpload
           label="Upload Thumbnail"
           setThumbnail={setThumbnail} // 부모 컴포넌트로 썸네일 전달
+          disabled={!auth.isAuthenticated}
         />
 
         {/* 에러 메시지 */}
@@ -93,7 +135,7 @@ const FileUploadModal = observer(({ onClose }) => {
 
         {/* 버튼 */}
         <div>
-          <button onClick={handleUpload} disabled={fileUploadStore.isUploading}>
+          <button onClick={handleUpload} disabled={fileUploadStore.isUploading || !auth.isAuthenticated}>
             {fileUploadStore.isUploading ? "Uploading..." : "Upload"}
           </button>
           <button onClick={onClose}>Cancel</button>
