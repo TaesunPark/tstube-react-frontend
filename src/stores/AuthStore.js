@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
+import { LOCAL_SERVER, PROD_SERVER } from '../env';
 
 class AuthStore {
   user = null;
@@ -43,7 +44,7 @@ class AuthStore {
   async fetchUserInfo() {
     this.isLoading = true;
     try {
-      const response = await fetch('http://localhost:8080/api/users/me', {
+      const response = await fetch(`${PROD_SERVER}/api/users/me`, {
         credentials: 'include' // 쿠키 포함
       });
       
@@ -83,7 +84,7 @@ class AuthStore {
   async logout() {
     try {
       // 백엔드 로그아웃 API 호출 (구현 필요)
-      await fetch('http://localhost:8080/api/auth/logout', {
+      await fetch(`${PROD_SERVER}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       });

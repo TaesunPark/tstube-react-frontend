@@ -63,7 +63,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
   // 로그인 페이지로 이동
   const goToLogin = () => {
     closeModal();
-    window.location.href = 'http://localhost:8080/auth/login/kakao'
+    window.location.href = 'https://tsbute.shop/auth/login/kakao'
   };
 
   return (

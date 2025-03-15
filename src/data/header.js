@@ -6,6 +6,7 @@ import { CiMoneyBill } from "react-icons/ci";
 import { AiFillGithub } from "react-icons/ai";
 import { AiFillYoutube } from "react-icons/ai";
 import { AiOutlineInstagram } from "react-icons/ai";
+import { KAKAO_SERVER_URL } from "../env";
 
 export const headerMenus = [
     {
@@ -16,7 +17,7 @@ export const headerMenus = [
     {
         title: "스트리밍 영상",
         icon: <CiMoneyBill />,
-        src: "/"
+        src: "https://tstube.shop/video?v=3a4acf97-b8d5-4b8b-9588-edad27e6df9c"
     },
     {
         title: "즐겨찾기 영상",
@@ -31,7 +32,7 @@ export const headerMenus = [
     {
         title: "로그인",
         icon: <CiLogin />,
-        src: "http://localhost:8080/auth/login/kakao",
+        src: KAKAO_SERVER_URL,
         external: true
     }
 ];
