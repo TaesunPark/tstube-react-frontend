@@ -18,11 +18,11 @@ const VideoDetail = observer(() => {
 
     const [searchParams] = useSearchParams();
     const videoID = searchParams.get('v');
-    const { video, loading, error } = videoStore;
+    const { video, loading, toggleFavorite } = videoStore;
 
     useEffect(() => {
         videoStore.getVideo(videoID);
-    }, []);
+    }, [videoID]);
 
     if (loading) return <div>Loading...</div>;
     if (!video) return <div>No video details available.</div>;
@@ -43,7 +43,12 @@ const VideoDetail = observer(() => {
                     </div>
                 </div>                
             </div>
-            <h1>제목 : {video.title}</h1>
+                    <h1>제목 : {video.title}</h1>
+                    <button
+                        onClick={() => toggleFavorite(video.videoId)}
+                    >
+                        {video.favorite ? '★' : '☆'}
+                    </button>
                     <p id="video-description">{video.description}</p>
                     <p>조회수 : {video.cnt}</p>
                     <button id="chat-toggle-button" onClick={toggleChatVisibility}>
