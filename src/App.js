@@ -17,6 +17,7 @@ import VideoDetail from './pages/VideoDetail'
 import axios from 'axios'
 import Footer from './components/section/Footer'
 import OAuthCallback from './components/auth/OAuthCallback'
+import Favorite from './pages/Favorite'
 
 const App = () => {
 	axios.defaults.headers.common['Accept'] = 'application/json';
@@ -30,7 +31,7 @@ const App = () => {
 				<Routes>
 					<Route path='/videos' element={<Video />}/>					
 					<Route path='/'	element={<Video/>}/>
-					<Route path='/today' element={<Today/>}/>
+					<Route path='/favorites' element={<Favorite/>}/>
 					<Route path='/home' element={<Home />}/>				
 					<Route path='/developer' element={<Developer/>}/>
 					<Route path='/webd' element={<Webd/>} />
