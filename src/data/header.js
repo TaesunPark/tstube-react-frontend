@@ -22,7 +22,7 @@ export const headerMenus = [
     {
         title: "즐겨찾기 영상",
         icon: <CiCoins1 />,
-        src: "/"
+        src: "/favorites"
     },
     {
         title: "내가 올린 영상",

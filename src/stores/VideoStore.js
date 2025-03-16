@@ -37,7 +37,9 @@ class VideoStore {
         console.log("getVideo 호출", videoId)
 
         try {
-            const response = await axios.get(`${SERVER_URL}/videos/${videoId}`)
+            const response = await axios.get(`${SERVER_URL}/videos/${videoId}`, {
+                withCredentials: true
+            })
             runInAction(() => {
                 this.video = response.data.data;
                 this.loading = false;                
@@ -79,58 +81,6 @@ class VideoStore {
 
     setAddVideo = (newVideo) => {
         this.videos = [...this.videos, newVideo]
-    }
-
-    // 즐겨찾기 추가/제거 토글 메소드
-    toggleFavorite = async (videoId) => {
-        try {
-            console.log(this.video.favorite, "favorite");
-            if (this.video.favorite) {
-                // 즐겨찾기 제거
-                await axios.delete(`${SERVER_URL}/favorites/${videoId}`, {
-                    withCredentials: true
-                });
-                runInAction(() => {
-                    this.video.favorite = false;
-                })
-            } else {                
-                await axios.post(`${SERVER_URL}/favorites/${videoId}`, {}, {
-                    withCredentials: true
-                });
-                runInAction(() => {
-                    this.video.favorite = true;
-                })
-            }
-        } catch (error) {
-            console.error('즐겨찾기 토글 실패', error);
-
-            runInAction(() => {
-                this.error = '즐겨찾기 처리 중 오류가 발생했습니다.';
-            });
-        }
-    }
-
-    getFavorites = async () => {
-        this.loading = true;
-        this.error = null;
-
-        try {
-            const response = await axios.get(`${SERVER_URL}/favorites`, {
-                withCredentials: true
-            });
-
-            return response.data.data;
-        } catch (error) {
-            runInAction(() => {
-                this.error = '즐겨찾기 목록을 불러오는데 실패했습니다'
-                this.loading = false;
-            });
-            return [];
-        } finally {
-            runInAction(() => {
-                this.loading = false;
-            });
-        }
     }
     
 }
