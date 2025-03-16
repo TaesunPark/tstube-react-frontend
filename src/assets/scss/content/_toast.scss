@@ -1,0 +1,58 @@
+$toast-success-color: #4caf50;
+$toast-error-color: #f44336;
+$toast-info-color: #2196f3;
+$toast-text-color: white;
+$toast-animation-duration: 3s;
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: $toast-text-color;
+  opacity: 0;
+  z-index: 9999;
+  animation: fadeInOut $toast-animation-duration ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-width: 350px;
+  transition: transform 0.3s ease;
+  
+  &.success {
+    background-color: $toast-success-color;
+  }
+  
+  &.error {
+    background-color: $toast-error-color;
+  }
+  
+  &.info {
+    background-color: $toast-info-color;
+  }
+  
+  .toast-message {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+// 토스트 아이콘 스타일
+.toast-icon {
+  margin-right: 8px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+// 토스트의 가시성 클래스
+.toast-container {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none; // 클릭이 통과하도록
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
