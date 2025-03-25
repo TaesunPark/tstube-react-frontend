@@ -25,7 +25,50 @@ const ModalStyle = {
   },
 }
 
-export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url, setUrl, title, setTitle, description, setDescription, thumbnail, setThumbnail, preview, setPreview  }) => {
+// 진행률 표시 컴포넌트 스타일
+const progressBarStyle = {
+  container: {
+    width: '100%',
+    marginTop: '10px',
+    marginBottom: '15px',
+  },
+  bar: {
+    height: '10px',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '5px',
+    overflow: 'hidden',
+  },
+  fill: {
+    height: '100%',
+    backgroundColor: '#4285f4',
+    borderRadius: '5px',
+    transition: 'width 0.3s ease',
+  },
+  text: {
+    fontSize: '12px',
+    textAlign: 'center',
+    marginTop: '5px',
+    color: '#666',
+  }
+};
+
+export const VideoAddModal = ({ 
+  modalIsOpen, 
+  closeModal, 
+  handleConfirmClick, 
+  url, 
+  setUrl, 
+  title, 
+  setTitle, 
+  description, 
+  setDescription, 
+  thumbnail, 
+  setThumbnail, 
+  preview, 
+  setPreview,
+  uploadProgress = 0,
+  isUploading = false 
+}) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -47,8 +90,8 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
     }
     
     // 입력 유효성 검사
-    if (!url.trim()) {
-      setError('URL 또는 iframe 태그를 입력해주세요.');
+    if (!url.trim() && !thumbnail) {
+      setError('URL 또는 iframe 태그를 입력하거나 비디오 파일을 업로드해주세요.');
       return;
     }
     
@@ -107,7 +150,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="iframe 태그 또는 url 정보를 넣어주세요."
-          disabled={!auth.isAuthenticated}
+          disabled={!auth.isAuthenticated || isUploading}
         />
       </div>
       
@@ -118,7 +161,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter Title"
           id='video-modal-input'
-          disabled={!auth.isAuthenticated}
+          disabled={!auth.isAuthenticated || isUploading}
         />
       </div>
       
@@ -128,7 +171,7 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter Description"
-          disabled={!auth.isAuthenticated}
+          disabled={!auth.isAuthenticated || isUploading}
         />
       </div>
       
@@ -136,22 +179,40 @@ export const VideoAddModal = ({ modalIsOpen, closeModal, handleConfirmClick, url
       <ReusableFileUpload
         label="Upload Thumbnail"
         setThumbnail={setThumbnail}
-        disabled={!auth.isAuthenticated}
+        disabled={!auth.isAuthenticated || isUploading}
       />
+      
+      {/* 업로드 진행률 표시 */}
+      {isUploading && (
+        <div style={progressBarStyle.container}>
+          <div style={progressBarStyle.bar}>
+            <div 
+              style={{
+                ...progressBarStyle.fill,
+                width: `${uploadProgress}%`
+              }} 
+            />
+          </div>
+          <div style={progressBarStyle.text}>
+            {uploadProgress}% 업로드됨
+          </div>
+        </div>
+      )}
       
       <div>
         <button
           onClick={closeModal}
           id='video-modal-button'
+          disabled={isUploading}
         >
           Close
         </button>
         <button
           onClick={handleConfirm}
           id='video-modal-button'
-          disabled={!auth.isAuthenticated}
+          disabled={!auth.isAuthenticated || isUploading}
         >
-          확인
+          {isUploading ? '업로드 중...' : '확인'}
         </button>
       </div>
     </Modal>
