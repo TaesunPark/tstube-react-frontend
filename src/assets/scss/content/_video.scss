@@ -1,72 +1,420 @@
+// Video.scss - 기존 스타일 + 모바일 반응형
+
+// 기존 변수 유지
 $border-color: #ddd;
 $border-radius: 8px;
 $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 $gap: 16px;
 $text-color: #555;
 
+// 반응형 변수 추가
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+$small-mobile-breakpoint: 480px;
+
+// 믹스인
+@mixin mobile {
+    @media (max-width: $mobile-breakpoint) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: $tablet-breakpoint) {
+        @content;
+    }
+}
+
+@mixin small-mobile {
+    @media (max-width: $small-mobile-breakpoint) {
+        @content;
+    }
+}
+
+// 메인 컨테이너 (모바일 여백 추가)
+#main {
+    @include mobile {
+        padding-top: 60px; // 모바일 헤더 높이만큼 여백
+    }
+}
+
+// 비디오 헤더 (모바일 전용)
+.video-header {
+    display: none;
+    
+    @include mobile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--black, #000);
+        color: var(--white, #fff);
+        position: sticky;
+        top: 60px;
+        z-index: 100;
+        border-bottom: 1px solid var(--black200, #333);
+        
+        .video-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .video-count {
+            font-size: 12px;
+            background: var(--black100, #333);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+    }
+    
+    @include small-mobile {
+        padding: 12px 16px;
+        
+        .video-title {
+            font-size: 18px;
+        }
+    }
+}
+
+// 기존 비디오 컨테이너2 (메인 그리드)
 #video-container2 {
-  overflow-y: scroll;
-  display: flex;
-  flex-wrap: wrap;
-  direction: row;
-  width: 100%;
-  height: 100%;
-  gap: 30px;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    direction: row;
+    width: 100%;
+    height: 100%;
+    gap: 30px;
+    
+    @include tablet {
+        gap: 20px;
+        padding: 16px;
+    }
+    
+    @include mobile {
+        flex-direction: column; // 세로 방향
+        flex-wrap: nowrap; // 줄바꿈 방지
+        gap: 16px;
+        padding: 12px;
+        overflow-y: visible; // 모바일에서는 자연스러운 스크롤
+    }
+    
+    @include small-mobile {
+        gap: 12px;
+        padding: 8px;
+    }
 }
 
+// 기존 비디오 컨테이너3 (개별 아이템)
 #video-container3 {
-  width: 25%;
-  height: 300px;
+    width: 25%;
+    height: 300px;
+    
+    @include tablet {
+        width: calc(50% - 10px); // 태블릿: 2컬럼
+        height: 280px;
+    }
+    
+    @include mobile {
+        width: 100% !important; // 모바일: 완전히 1컬럼
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0; // 크기 축소 방지
+    }
+    
+    @include small-mobile {
+        height: auto;
+    }
 }
 
-#video-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  font-size: 5px;
-  height: 30px;
-  color: #ddd;
-}
-
-#video-add-container3 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 25%;
-  height: 270px;
-  border: 1px solid $border-color;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
-  padding: $gap;
-}
-
+// 기존 비디오 아이템
 #video-item {
-  border: 1px solid $border-color;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
-  padding: $gap;
-  width: 100%;
-  height: 90%;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-
-  img{
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    padding: $gap;
+    width: 100%;
     height: 90%;
-  }
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    
+    @include mobile {
+        height: 200px; // 모바일에서 고정 높이
+        aspect-ratio: 16/9; // 16:9 비율 유지
+    }
+    
+    @include small-mobile {
+        height: 180px;
+        padding: 12px;
+    }
 
-  p {
-    margin-bottom: 0;
+    img {
+        height: 90%;
+        width: auto;
+        max-width: 100%;
+        object-fit: cover;
+        
+        @include mobile {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    p {
+        margin-bottom: 0;
+        color: $text-color;
+        
+        @include mobile {
+            font-size: 14px;
+        }
+        
+        @include small-mobile {
+            font-size: 12px;
+        }
+    }
+    
+    // 기존 호버 효과 유지 (데스크탑)
+    &:hover {
+        background-color: #e0e0e0;
+        
+        @include mobile {
+            background-color: transparent; // 모바일에서는 호버 효과 제거
+        }
+    }
+    
+    // 모바일 터치 효과
+    @include mobile {
+        &:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+    }
+}
+
+// 기존 비디오 제목
+#video-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size: 5px;
+    height: 30px;
+    color: #ddd;
+    
+    @include mobile {
+        font-size: 14px;
+        height: auto;
+        padding: 8px 4px;
+        text-align: center;
+        line-height: 1.3;
+        justify-content: flex-start; // 왼쪽 정렬
+        
+        span {
+            font-weight: 500;
+            // 긴 제목 처리
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    
+    @include small-mobile {
+        font-size: 13px;
+        padding: 6px 4px;
+        
+        span {
+            -webkit-line-clamp: 3; // 작은 화면에서 3줄까지
+        }
+    }
+}
+
+// 기존 비디오 추가 버튼
+#video-add-container3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 270px;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    padding: $gap;
+    cursor: pointer;
+    
+    @include tablet {
+        width: calc(50% - 10px);
+        height: 250px;
+    }
+    
+    @include mobile {
+        width: 100% !important; // 모바일: 완전히 1컬럼
+        height: 150px;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0; // 크기 축소 방지
+    }
+    
+    @include small-mobile {
+        height: 120px;
+        padding: 12px;
+    }
+    
+    // 기존 호버 효과 유지
+    &:hover {
+        background-color: #e0e0e0;
+        
+        @include mobile {
+            background-color: transparent;
+        }
+    }
+    
+    // 모바일 터치 효과
+    @include mobile {
+        &:active {
+            background-color: #f0f0f0;
+            transform: scale(0.98);
+            transition: all 0.1s ease;
+        }
+    }
+    
+    // 아이콘과 텍스트 스타일링
+    .add-icon {
+        @include mobile {
+            font-size: 40px;
+        }
+        
+        @include small-mobile {
+            font-size: 32px;
+        }
+    }
+    
+    .add-text {
+        display: none;
+        
+        @include mobile {
+            display: block;
+            font-size: 12px;
+            color: $text-color;
+            text-align: center;
+            margin-top: 4px;
+        }
+    }
+}
+
+// 플로팅 버튼 위치 조정 (모바일)
+.floating-button {
+    @include mobile {
+        bottom: 20px;
+        right: 16px;
+        z-index: 1000;
+    }
+}
+
+// 스크롤바 스타일링 (모바일에서 숨김)
+#video-container2 {
+    &::-webkit-scrollbar {
+        @include mobile {
+            display: none;
+        }
+    }
+    
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    
+    @include mobile {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+// 로딩 상태
+.video-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
     color: $text-color;
-  }
+    font-size: 14px;
+    
+    @include mobile {
+        height: 150px;
+        font-size: 13px;
+    }
 }
 
-#video-item:hover {
-  background-color: #e0e0e0;
+// 빈 상태
+.video-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 300px;
+    color: $text-color;
+    text-align: center;
+    
+    @include mobile {
+        height: 200px;
+        padding: 20px;
+    }
+    
+    h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        
+        @include mobile {
+            font-size: 16px;
+        }
+    }
+    
+    p {
+        font-size: 14px;
+        
+        @include mobile {
+            font-size: 13px;
+        }
+    }
 }
 
-#video-add-container3:hover {
-  background-color: #e0e0e0;
+// 모바일 강제 1컬럼 스타일
+@include mobile {
+    #video-container2 {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important; // 전체 너비 사용
+        
+        > * {
+            width: 100% !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
+        }
+    }
+    
+    #video-container3,
+    #video-add-container3 {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+// 접근성 - 모션 감소
+@media (prefers-reduced-motion: reduce) {
+    #video-item,
+    #video-add-container3 {
+        &:active {
+            transform: none;
+            transition: none;
+        }
+    }
 }

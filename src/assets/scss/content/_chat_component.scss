@@ -1,0 +1,642 @@
+// ChatComponent.scss - 입력창 위치 수정 버전
+
+// 반응형 변수
+$mobile-breakpoint: 768px;
+$small-mobile-breakpoint: 480px;
+
+// 믹스인
+@mixin mobile {
+    @media (max-width: $mobile-breakpoint) {
+        @content;
+    }
+}
+
+@mixin small-mobile {
+    @media (max-width: $small-mobile-breakpoint) {
+        @content;
+    }
+}
+
+// 채팅 래퍼
+.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-size: 14px;
+    background: white;
+    
+    @include mobile {
+        z-index: 9999;
+        height: 100%;
+        font-size: 13px;
+        border-radius: 16px 16px 0 0;
+        overflow: hidden;
+        max-height: 100%;
+    }
+}
+
+// 채팅 제목 헤더 (드래그 핸들 + 제목 + 닫기 버튼)
+.chat-title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    flex-shrink: 0;
+    
+    .chat-title {
+        font-size: 16px;
+        margin: 0;
+        color: #555;
+        padding: 12px 16px;
+        font-weight: 600;
+        flex: 1;
+        
+        @include mobile {
+            font-size: 15px;
+            padding: 20px 60px 12px 16px;
+            text-align: left;
+            position: relative;
+        }
+    }
+    
+    .mobile-close-btn {
+        display: none;
+        
+        @include mobile {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.05);
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            border-radius: 50%;
+            margin-right: 8px;
+            transition: all 0.2s ease;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 11;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            
+            &:hover, &:active {
+                background-color: rgba(0, 0, 0, 0.1);
+                color: #333;
+                transform: translateY(-50%) scale(0.9);
+            }
+            
+            &::before {
+                content: '';
+                position: absolute;
+                top: -8px;
+                left: -8px;
+                right: -8px;
+                bottom: -8px;
+                border-radius: 50%;
+            }
+        }
+    }
+    
+    @include mobile {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        cursor: default;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: #ccc;
+            border-radius: 2px;
+            z-index: 1;
+        }
+    }
+}
+
+// 상태 헤더 스타일
+.chat-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 16px;
+    flex-shrink: 0;
+    
+    @include mobile {
+        padding: 8px 12px 8px;
+        margin-bottom: 8px;
+        background: rgba(248, 249, 250, 0.5);
+        border-bottom: 1px solid rgba(221, 221, 221, 0.3);
+    }
+    
+    .connection-status {
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        
+        &::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+            margin-right: 6px;
+        }
+        
+        @include mobile {
+            font-size: 11px;
+        }
+    }
+    
+    .users-toggle-btn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        color: #2196F3;
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        
+        &:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+        
+        &:active {
+            transform: scale(0.95);
+        }
+        
+        @include mobile {
+            font-size: 11px;
+            padding: 6px 8px;
+            min-height: 32px;
+        }
+        
+        span:first-child {
+            margin-right: 6px;
+            
+            @include mobile {
+                margin-right: 4px;
+            }
+        }
+        
+        span:last-child {
+            transition: transform 0.2s ease;
+        }
+        
+        &.expanded span:last-child {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+// 접속자 목록
+.users-container {
+    margin-bottom: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    background: #fafafa;
+    border-radius: 8px;
+    margin: 0 16px 12px;
+    flex-shrink: 0;
+    
+    @include mobile {
+        margin: 0 8px 8px;
+        max-height: 100px;
+        border-radius: 12px;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+.users-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    
+    .user-item {
+        padding: 10px 16px;
+        border-bottom: 1px solid rgba(238, 238, 238, 0.5);
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        transition: background-color 0.2s ease;
+        
+        &:hover {
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+        
+        @include mobile {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
+        &:last-child {
+            border-bottom: none;
+        }
+        
+        &.error {
+            color: red;
+        }
+        
+        .user-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            display: inline-block;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+    }
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.no-users {
+    text-align: center;
+    color: #999;
+    padding: 16px;
+    font-size: 13px;
+    font-style: italic;
+    
+    @include mobile {
+        padding: 12px;
+        font-size: 12px;
+    }
+}
+
+// 에러 및 로딩 메시지
+.error-message {
+    color: #f44336;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    font-size: 12px;
+    background: rgba(244, 67, 54, 0.1);
+    border-radius: 8px;
+    margin: 0 16px 12px;
+    flex-shrink: 0;
+    
+    @include mobile {
+        padding: 10px 16px;
+        font-size: 11px;
+        margin: 0 16px 8px;
+    }
+}
+
+.loading-message {
+    text-align: center;
+    color: #666;
+    padding: 16px;
+    font-size: 13px;
+    flex-shrink: 0;
+    
+    @include mobile {
+        padding: 12px;
+        font-size: 12px;
+    }
+}
+
+// 메시지 컨테이너 - 입력창을 위한 하단 여백 추가
+.messages-container {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 0 16px 12px;
+    background: white;
+    flex: 1;
+    
+    @include mobile {
+        height: auto;
+        flex: 1;
+        margin: 0 8px 0;
+        padding: 8px 12px;
+        padding-bottom: 80px; // 입력창 높이만큼 하단 여백 추가
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        overscroll-behavior: contain;
+    }
+    
+    &::-webkit-scrollbar {
+        width: 6px;
+        
+        @include mobile {
+            width: 3px;
+        }
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+        
+        &:hover {
+            background: #999;
+        }
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
+.loading-more {
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-item {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: #f5f5f5;
+    max-width: 85%;
+    word-wrap: break-word;
+    word-break: break-word;
+    animation: slideIn 0.2s ease;
+    
+    @include mobile {
+        font-size: 12px;
+        margin-bottom: 6px;
+        padding: 6px 8px;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        background: #f8f9fa;
+        border-radius: 8px;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    .message-sender {
+        font-weight: 600;
+        color: #2196F3;
+        margin-right: 4px;
+        display: inline-block;
+        
+        @include mobile {
+            font-size: 11px;
+            margin-right: 3px;
+        }
+    }
+    
+    &.own-message {
+        margin-left: auto;
+        background: #2196F3;
+        color: white;
+        
+        .message-sender {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        @include mobile {
+            margin-left: 15%;
+            margin-right: 0;
+        }
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.no-messages {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    font-style: italic;
+    font-size: 14px;
+    
+    @include mobile {
+        padding: 30px 16px;
+        font-size: 12px;
+    }
+}
+
+// 입력 컨테이너 - 원래 구조로 복원
+.input-container {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+    
+    @include mobile {
+        padding: 12px 8px;
+        position: sticky; // fixed를 sticky로 변경
+        bottom: 0;
+        background: white;
+        border-top: 1px solid #eee;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+        gap: 8px;
+        z-index: 10;
+        
+        // 안드로이드 키보드 대응
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+    
+    .message-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 24px;
+        font-size: 14px;
+        background: #fafafa;
+        transition: all 0.2s ease;
+        
+        &:focus {
+            outline: none;
+            border-color: #2196F3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        &:disabled {
+            background: #f0f0f0;
+            cursor: not-allowed;
+            color: #999;
+        }
+        
+        @include mobile {
+            font-size: 16px;
+            padding: 10px 12px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            
+            &:focus {
+                border-color: #2196F3;
+                box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+            }
+        }
+    }
+    
+    .send-btn {
+        width: 48px;
+        height: 48px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-weight: 600;
+        flex-shrink: 0;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        
+        &.active {
+            background-color: #2196F3;
+            color: white;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+            
+            &:hover {
+                background-color: #1976D2;
+                transform: scale(1.05);
+            }
+            
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+        
+        &.disabled {
+            background-color: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        @include mobile {
+            width: 40px;
+            height: 40px;
+            font-size: 11px;
+            border-radius: 50%;
+        }
+    }
+}
+
+// 에러 상태
+.error {
+    color: #f44336;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    background: rgba(244, 67, 54, 0.1);
+    border-radius: 8px;
+    margin: 16px;
+    
+    @include mobile {
+        padding: 12px;
+        font-size: 11px;
+        margin: 12px 16px;
+    }
+}
+
+// 모바일 전용 드래그 기능을 위한 스타일
+@include mobile {
+    .chat-wrapper {
+        touch-action: pan-y;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    // 채팅이 축소되었을 때
+    .chat-wrapper.minimized {
+        .chat-status-header,
+        .users-container,
+        .messages-container,
+        .input-container {
+            display: none;
+        }
+        
+        .chat-title-header .chat-title {
+            padding: 16px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    }
+}
+
+// 접근성 개선
+@media (prefers-reduced-motion: reduce) {
+    .message-item,
+    .users-toggle-btn,
+    .send-btn,
+    .mobile-close-btn,
+    .loading-more {
+        animation: none;
+        transition: none;
+    }
+}
+
+// 고대비 모드 지원
+@media (prefers-contrast: high) {
+    .chat-wrapper {
+        border: 2px solid #000;
+    }
+    
+    .message-input {
+        border: 2px solid #000;
+    }
+    
+    .send-btn.active {
+        background: #000;
+        color: #fff;
+    }
+}
